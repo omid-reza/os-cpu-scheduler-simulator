@@ -1,9 +1,26 @@
 .app{
-	width: 80%;
-	margin-left: 10%;
+	width: 90%;
+	margin-left: 5%;
 	margin-top: 10%;
 }
 body{
 	color: white;
 	background: gray;
+}
+.btn-insert{
+	float: right;
+}
+.proccess{
+	display: flex;
+}
+.arrive-time{
+	margin-left: 2%;
+	width: 38%;
+}
+.birth-time{
+	margin-left: 2%;
+	width: 38%; 
+}
+.delete{
+	margin-left: 2%;
 }
