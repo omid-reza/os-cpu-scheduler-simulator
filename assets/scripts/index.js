@@ -105,7 +105,6 @@ const app=new Vue({
 			var pr;
 			var queue=[];
 			var singleProccess={};
-			// fix few data comes in 0 time
 			var proccessedData=[
 				{
 					index:this.data[0].index,
@@ -182,6 +181,14 @@ const app=new Vue({
 			  if ( a.arrive > b.arrive ){
 			    return 1;
 			  }
+			  // arrive time are same so we check birth time
+			  if (a.birth<b.birth){
+			  	return -1;
+			  }
+			  if (a.birth>b.birth){
+			  	return 1;
+			  }
+			  // arrive time and birth time are same
 			  return 0;
 			});
 		},
