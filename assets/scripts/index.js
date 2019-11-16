@@ -105,6 +105,7 @@ const app=new Vue({
 			var pr;
 			var queue=[];
 			var singleProccess={};
+			// fix few data comes in 0 time
 			var proccessedData=[
 				{
 					index:this.data[0].index,
@@ -116,7 +117,7 @@ const app=new Vue({
 			];
 			while(proccessedData.length<this.data.length){
 				singleProccess={};
-				queue=app.fillQueue(queue, proccessedData[proccessedData.length-1].start, proccessedData[proccessedData.length-1].finish);
+				queue=app.fillQueue(queue, proccessedData[proccessedData.length-1].start, proccessedData[proccessedData.length-1].finish, proccessedData[proccessedData.length-1].index);
 				pr=app.findMinInQueue(queue);
 				if (pr==null)
 					pr=app.findMinInQueueFree(this.data, proccessedData[proccessedData.length-1].finish);
@@ -139,7 +140,7 @@ const app=new Vue({
 				this.borderColor.push(this.listBorderColor[i%6]);
 				this.backgroundColor.push(this.listBackgroundColor[i%6]);
 				this.labels.push("process "+(proccessedData[i].index+1));
-				this.chartData.push([proccessedData[i].start,proccessedData[i].finish]);
+				this.chartData.push([proccessedData[i].start, proccessedData[i].finish]);
 			}
 			app.showChart();
 		},
@@ -184,10 +185,9 @@ const app=new Vue({
 			  return 0;
 			});
 		},
-		//need to fix for free times
-		fillQueue(queue, start, finish){
+		fillQueue(queue, start, finish, index){
 			for (var i = 0; i < this.data.length; i++) {
-				if (this.data[i].arrive>start && this.data[i].arrive<finish) {
+				if (this.data[i].arrive>=start && this.data[i].arrive<=finish && this.data[i].index!=index) {
 					queue.push(this.data[i]);
 				}
 			}
@@ -205,7 +205,6 @@ const app=new Vue({
 			});
 			for (var i = 0; i < data.length; i++) {
 				if (data[i].arrive>greaterFrom){
-					console.log(data[i]);
 					return data[i];
 				}
 			}

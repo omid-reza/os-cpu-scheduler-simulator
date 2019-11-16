@@ -26,6 +26,7 @@ body{
 }
 
 .chart{
-	width: 100%;
+	width: 90%;
 	height: 400px;
+	margin-left: 5%;
 }
