@@ -185,11 +185,16 @@ const app=new Vue({
 				});
 				pickedProccess.birthLeft=pickedProccess.birthLeft-this.timeQuantum;
 				time+=this.timeQuantum;
-				//TODO: change timeQuantum to other value...
-				if (pickedProccess.birthLeft>0)
+				if (pickedProccess.birthLeft>0){
 					queue.push(pickedProccess);
-				else
+				}else{
+					if (pickedProccess.birthLeft<0){
+						pickedProccess.executes[pickedProccess.executes.length-1].finish=pickedProccess.executes[pickedProccess.executes.length-1].finish+pickedProccess.birthLeft;						
+						time+=pickedProccess.birthLeft;
+						pickedProccess.birthLeft=0;
+					}
 					response.push(pickedProccess);
+				}
 			}
 		},
 		showChart(){
