@@ -144,7 +144,44 @@ const app=new Vue({
 			app.showChart();
 		},
 		simulateROUNDROBIN(){
-
+			app.sortByArriveTime;
+			var timeQuantum=1;
+			var pickedProccess;
+			queue=[
+				{
+					index:this.data[0].index,
+					birth:this.data[0].birth,
+					arrive: this.data[0].arrive,
+					executes:[],
+					birthLeft:this.data[0].birth
+				}
+			];
+			var time=this.data[0].arrive;
+			var response=[];
+			while(true){
+				if (queue.length==0){
+					queue=app.isnertProccessToQueueInFreeTime(queue, time);
+					if (queue.length==0){
+						console.log(response);
+						return
+					}else
+						time=queue[queue.length-1].arrive;
+				}
+				pickedProccess=queue[0];
+				queue.splice(0, 1);
+				queue=app.insertProccessToQueueWhileExecute(queue, time, time+timeQuantum, pickedProccess.index);
+				pickedProccess.executes.push({
+					start:time,
+					finish:time+timeQuantum
+				});
+				pickedProccess.birthLeft=pickedProccess.birthLeft-timeQuantum;
+				time+=timeQuantum;
+				//TODO: change timeQuantum to other value...
+				if (pickedProccess.birthLeft>0)
+					queue.push(pickedProccess);
+				else
+					response.push(pickedProccess);
+			}
 		},
 		showChart(){
 			var myChart = new Chart(chart, {
@@ -227,6 +264,40 @@ const app=new Vue({
 			  return 0;
 			});
 			return queue[0];
+		},
+		insertProccessToQueueWhileExecute(queue, start, finish, index){
+			//check = should be in finish or start
+			for (var i = 0; i < this.data.length; i++) {
+				if (this.data[i].arrive>=start && this.data[i].arrive<finish && this.data[i].index!=index) {
+					queue.push(
+						{
+							executes:[],
+							index:this.data[i].index,
+							birth:this.data[i].birth,
+							arrive:this.data[i].arrive,
+							birthLeft:this.data[i].birth
+						}
+					);
+				}
+			}
+			return queue;
+		},
+		isnertProccessToQueueInFreeTime(queue, greaterFrom){
+			for (var i = 0; i < this.data.length; i++) {
+				if (this.data[i].arrive>greaterFrom){
+					queue.push(
+						{
+							executes:[],
+							index:this.data[i].index,
+							birth:this.data[i].birth,
+							arrive:this.data[i].arrive,
+							birthLeft:this.data[i].birth
+						}
+					);
+					return queue;
+				}
+			}
+			return [];
 		}
 	}
 });
