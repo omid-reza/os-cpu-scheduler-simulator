@@ -8,6 +8,9 @@ const app=new Vue({
 		error:null,
 		processes:[],
 		chartData:[],
+		warning:null,
+		timeQuantum:null,
+		timeQuantumInput:"",
 		chartBorderColors:[],
 		chartBackGroundColors:[],
 		listBorderColor:[
@@ -55,6 +58,13 @@ const app=new Vue({
 					app.simulateSJF();
 				break;
 				case "round-robin":
+					if (this.timeQuantumInput.length==0){
+						this.warning="Time Quantum set to 1"
+						this.timeQuantum=1;
+					}else{
+						this.warning=null;
+						this.timeQuantum=parseFloat(this.timeQuantumInput);
+					}
 					app.simulateROUNDROBIN();
 				break;
 				default:
@@ -145,7 +155,6 @@ const app=new Vue({
 		},
 		simulateROUNDROBIN(){
 			app.sortByArriveTime;
-			var timeQuantum=1;
 			var pickedProccess;
 			queue=[
 				{
@@ -169,13 +178,13 @@ const app=new Vue({
 				}
 				pickedProccess=queue[0];
 				queue.splice(0, 1);
-				queue=app.insertProccessToQueueWhileExecute(queue, time, time+timeQuantum, pickedProccess.index);
+				queue=app.insertProccessToQueueWhileExecute(queue, time, time+this.timeQuantum, pickedProccess.index);
 				pickedProccess.executes.push({
 					start:time,
-					finish:time+timeQuantum
+					finish:time+this.timeQuantum
 				});
-				pickedProccess.birthLeft=pickedProccess.birthLeft-timeQuantum;
-				time+=timeQuantum;
+				pickedProccess.birthLeft=pickedProccess.birthLeft-this.timeQuantum;
+				time+=this.timeQuantum;
 				//TODO: change timeQuantum to other value...
 				if (pickedProccess.birthLeft>0)
 					queue.push(pickedProccess);

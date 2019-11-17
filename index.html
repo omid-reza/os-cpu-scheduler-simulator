@@ -9,8 +9,11 @@
 </head>
 <body>
 	<div id="app" class="app">
-		<div class="alert alert-danger alrt" role="alert" v-if="error">
+		<div class="alert alert-danger alrt" role="alert" v-show="error">
 			{{error}}
+		</div>
+		<div class="alert alert-warning alrt" role="alert" v-show="warning">
+			{{warning}}
 		</div>
 		<form>
 			<div class="form-group">
@@ -20,6 +23,10 @@
 			      <option value="sjf">SJF</option>
 			      <option value="round-robin">Round Robin</option>
 			    </select>
+			</div>
+			<div class="form-group" v-show="type=='round-robin'">
+				<label for="timeQuantum">Time Quantum</label>
+				<input name="timeQuantum" type="text" class="form-control" placeholder="Time Quantum" v-model="timeQuantumInput">
 			</div>
 			<div class="form-group proccess" v-for="(proccess, index) in processes">
 				Proccess {{index+1}} :
