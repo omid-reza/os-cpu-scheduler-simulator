@@ -12,8 +12,10 @@
 		<div class="alert alert-danger alrt" role="alert" v-show="error">
 			{{error}}
 		</div>
-		<div class="alert alert-warning alrt" role="alert" v-show="warning">
-			{{warning}}
+		<div v-for="warn in warning">
+			<div class="alert alert-warning alrt" role="alert" v-show="warning">
+				{{warn}}
+			</div>
 		</div>
 		<form>
 			<div class="form-group">

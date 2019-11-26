@@ -54,6 +54,7 @@ const app=new Vue({
 				this.data.push({arrive:parseInt(this.processes[i].arrive), birth:parseInt(this.processes[i].birth), index:i});
 			}
 			this.error=null;
+			this.warning=[];
 			switch(this.type){
 				case "fcfs":
 					app.simulateFCFS();
@@ -63,10 +64,9 @@ const app=new Vue({
 				break;
 				case "round-robin":
 					if (this.timeQuantumInput.length==0){
-						this.warning="Time Quantum set to 1"
+						this.warning.push("Time Quantum set to 1");
 						this.timeQuantum=1;
 					}else{
-						this.warning=null;
 						this.timeQuantum=parseFloat(this.timeQuantumInput);
 					}
 					app.simulateROUNDROBIN();
@@ -177,6 +177,8 @@ const app=new Vue({
 					queue=app.isnertProccessToQueueInFreeTime(queue, time);
 					if (queue.length==0){
 						this.chartData=response;
+						console.log(response);
+						this.warning.push("for round robin execution data is in console !");
 						return
 					}else
 						time=queue[queue.length-1].arrive;
