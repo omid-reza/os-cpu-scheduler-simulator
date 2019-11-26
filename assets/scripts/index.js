@@ -9,7 +9,11 @@ const app=new Vue({
 		processes:[],
 		chartData:[],
 		warning:null,
+		burstTime:null,
+		arrivalTime:null,
 		timeQuantum:null,
+		completionTime:null,
+		turnAroundTime:null,
 		timeQuantumInput:"",
 		chartBorderColors:[],
 		chartBackGroundColors:[],
@@ -71,6 +75,7 @@ const app=new Vue({
 					this.error="select simulate type.";
 					return;
 			}
+			app.calculateDetails();
 		},
 		simulateFCFS(){
 			app.sortByArriveTime();
@@ -171,7 +176,7 @@ const app=new Vue({
 				if (queue.length==0){
 					queue=app.isnertProccessToQueueInFreeTime(queue, time);
 					if (queue.length==0){
-						console.log(response);
+						this.chartData=response;
 						return
 					}else
 						time=queue[queue.length-1].arrive;
@@ -280,7 +285,6 @@ const app=new Vue({
 			return queue[0];
 		},
 		insertProccessToQueueWhileExecute(queue, start, finish, index){
-			//check = should be in finish or start
 			for (var i = 0; i < this.data.length; i++) {
 				if (this.data[i].arrive>=start && this.data[i].arrive<finish && this.data[i].index!=index) {
 					queue.push(
@@ -312,6 +316,43 @@ const app=new Vue({
 				}
 			}
 			return [];
+		},
+		calculateDetails(){
+			this.burstTime=app.totalBitrh()/this.processes.length;
+			this.arrivalTime=app.totalArrive()/this.processes.length;
+			this.completionTime=app.totalFinish()/this.processes.length;
+			this.turnAroundTime=app.completionTime-app.arrivalTime;
+		},
+		totalFinish(){
+			// types are fcfs , sjf, round-robin
+			if (this.type == "round-robin")
+				return app.totalFinishTimesRoundRobin();
+			else
+				return app.totalFinishTimes(); 
+		},
+		totalFinishTimes(){
+			var res=0;
+			for (var i = 0; i < this.chartData.length; i++)
+				res+=this.chartData[i][1];
+			return res;
+		},
+		totalFinishTimesRoundRobin(){
+			var res=0;
+			for (var i = 0; i < this.chartData.length; i++)
+				res+=this.chartData[i].executes[this.chartData[i].executes.length-1].finish;
+			return res;
+		},
+		totalArrive(){
+			var res=0;
+			for (var i = 0; i < this.data.length; i++)
+				res+=this.data[i].arrive;
+			return res;
+		},
+		totalBitrh(){
+			var res=0;
+			for (var i = 0; i < this.data.length; i++)
+				res+=this.data[i].birth;
+			return res;	
 		}
 	}
 });

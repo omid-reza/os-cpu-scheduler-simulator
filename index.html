@@ -43,6 +43,23 @@
 				<button type="button" class="btn btn-warning form-control" v-on:click="simulate()">Simulate</button>
 			</div>
 		</form>
+		<div class="details">
+			<data v-show="arrivalTime!=null">
+				Arrival Time : {{arrivalTime}}
+			</data>
+			<br>
+			<data v-show="completionTime!=null"
+				>Completion Time : {{completionTime}}
+			</data>
+			<br>
+			<data v-show="burstTime!=null">
+				Burst Time : {{burstTime}}
+			</data>
+			<br>
+			<data v-show="turnAroundTime!=null">
+				Turn Around Time : {{turnAroundTime}}
+			</data>
+		</div>
 	</div>
 	<div class="chart">
 		<canvas id="chart"></canvas>
