@@ -30,8 +30,8 @@
 			</div>
 			<div class="form-group proccess" v-for="(proccess, index) in processes">
 				Proccess {{index+1}} :
-				<input name="arrive" type="text" class="form-control arrive-time" placeholder="arrive time(second)" v-model="proccess.arrive">
-				<input name="birth" type="text" class="form-control birth-time" placeholder="birth time(second)" v-model="proccess.birth">
+				<input name="arrive" type="text" class="form-control arrive-time" placeholder="arrive time" v-model="proccess.arrive">
+				<input name="birth" type="text" class="form-control birth-time" placeholder="birth time" v-model="proccess.birth">
 				<button type="button" class="btn btn-danger delete" v-on:click="deleteProccess(index)">Delete Proccess</button>
 			</div>
 			<div class="form-group">
