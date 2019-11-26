@@ -1,84 +1,112 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-	<link rel="stylesheet" href="assets/style/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="assets/style/index.css">
-	<link rel="stylesheet" type="text/css" href="assets/style/Chart.min.css">
-	<meta charset="utf-8">
-</head>
-<body>
-	<div id="app" class="app">
-		<div class="alert alert-danger alrt" role="alert" v-show="error">
-			{{error}}
-		</div>
-		<div v-for="warn in warning">
-			<div class="alert alert-warning alrt" role="alert" v-show="warning">
-				{{warn}}
+	<head>
+		<title>
+			Cpu Time Scheduling
+		</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="assets/style/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="assets/style/index.css">
+		<link rel="stylesheet" type="text/css" href="assets/style/Chart.min.css">
+	</head>
+	<body>
+		<div id="app" class="app">
+			<div class="alert alert-danger alrt" role="alert" v-show="error">
+				{{error}}
+			</div>
+			<div v-for="warn in warning">
+				<div class="alert alert-warning alrt" role="alert" v-show="warning">
+					{{warn}}
+				</div>
+			</div>
+			<form>
+				<div class="form-group">
+				    <label for="SimulateType">
+				    	Simulate Type
+				    </label>
+				    <select class="form-control" id="SimulateType" v-model="type">
+				      <option value="fcfs">
+				      	FCFS
+				      </option>
+				      <option value="sjf">
+				      	SJF
+				      </option>
+				      <option value="round-robin">
+				      	Round Robin
+				      </option>
+				    </select>
+				</div>
+				<div class="form-group" v-show="type=='round-robin'">
+					<label for="timeQuantum">
+						Time Quantum
+					</label>
+					<input name="timeQuantum" type="text" class="form-control" placeholder="Time Quantum" v-model="timeQuantumInput">
+				</div>
+				<div class="form-group proccess" v-for="(proccess, index) in processes">
+					Proccess {{index+1}} :
+					<input name="arrive" type="text" class="form-control arrive-time" placeholder="arrive time" v-model="proccess.arrive" />
+					<input name="birth" type="text" class="form-control birth-time" placeholder="birth time" v-model="proccess.birth" />
+					<button type="button" class="btn btn-danger delete" v-on:click="deleteProccess(index)">
+						Delete Proccess
+					</button>
+				</div>
+				<div class="form-group">
+					<button type="button" class="btn btn-insert btn-dark" v-on:click="isnertProccess()">
+						Insert Proccess
+					</button>
+				</div>
+				<br>
+				<br>
+				<div class="form-group">
+					<button type="button" class="btn btn-warning form-control" v-on:click="simulate()">
+						Simulate
+					</button>
+				</div>
+			</form>
+			<div class="container">
+			  <div class="row">
+			    <div class="col" v-show="arrivalTime!=null">
+					<data class="title">
+						Average Arrival Time : {{arrivalTime}}
+					</data>
+			    </div>
+			    <div class="col"></div>
+			    <div class="col" v-show="completionTime!=null">
+			      	<data class="title">
+			      		Average Completion Time : {{completionTime}}
+			      	</data>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="col" v-show="completionTime!=null">
+			     	<data class="title">
+			     		Average Completion Time : {{completionTime}}
+			     	</data>
+			    </div>
+			    <div class="col"></div>
+			    <div class="col" v-show="burstTime!=null">
+					<data class="title">
+						Average Burst Time : {{burstTime}}
+					</data>
+			    </div>
+			  </div>
+			  <div class="row">
+			  	<div class="col"></div>
+			    <div class="col" v-show="turnAroundTime!=null">
+					<data class="title">
+						Average Turn Around Time : {{turnAroundTime}}
+					</data>
+			    </div>
+			    <div class="col"></div>
+			  </div>
 			</div>
 		</div>
-		<form>
-			<div class="form-group">
-			    <label for="SimulateType">Simulate Type</label>
-			    <select class="form-control" id="SimulateType" v-model="type">
-			      <option value="fcfs">FCFS</option>
-			      <option value="sjf">SJF</option>
-			      <option value="round-robin">Round Robin</option>
-			    </select>
-			</div>
-			<div class="form-group" v-show="type=='round-robin'">
-				<label for="timeQuantum">Time Quantum</label>
-				<input name="timeQuantum" type="text" class="form-control" placeholder="Time Quantum" v-model="timeQuantumInput">
-			</div>
-			<div class="form-group proccess" v-for="(proccess, index) in processes">
-				Proccess {{index+1}} :
-				<input name="arrive" type="text" class="form-control arrive-time" placeholder="arrive time" v-model="proccess.arrive">
-				<input name="birth" type="text" class="form-control birth-time" placeholder="birth time" v-model="proccess.birth">
-				<button type="button" class="btn btn-danger delete" v-on:click="deleteProccess(index)">Delete Proccess</button>
-			</div>
-			<div class="form-group">
-				<button type="button" class="btn btn-insert btn-dark" v-on:click="isnertProccess()">Insert Proccess</button>
-			</div>
-			<br>
-			<br>
-			<div class="form-group">
-				<button type="button" class="btn btn-warning form-control" v-on:click="simulate()">Simulate</button>
-			</div>
-		</form>
-		<div class="container">
-		  <div class="row">
-		    <div class="col" v-show="arrivalTime!=null">
-				<data class="title">Average Arrival Time : {{arrivalTime}}</data>
-		    </div>
-		    <div class="col"></div>
-		    <div class="col" v-show="completionTime!=null">
-		      	<data class="title">Average Completion Time : {{completionTime}}</data>
-		    </div>
-		  </div>
-		  <div class="row">
-		    <div class="col" v-show="completionTime!=null">
-		     	<data class="title">Average Completion Time : {{completionTime}}</data>
-		    </div>
-		    <div class="col"></div>
-		    <div class="col" v-show="burstTime!=null">
-				<data class="title">Average Burst Time : {{burstTime}}</data>
-		    </div>
-		  </div>
-		  <div class="row">
-		  	<div class="col"></div>
-		    <div class="col" v-show="turnAroundTime!=null">
-				<data class="title">Average Turn Around Time : {{turnAroundTime}}</data>
-		    </div>
-		    <div class="col"></div>
-		  </div>
+		<div class="chart">
+			<canvas id="chart"></canvas>
 		</div>
-	</div>
-	<div class="chart">
-		<canvas id="chart"></canvas>
-	</div>
-	<script type="text/javascript" src="assets/scripts/vue.js"></script>
-	<script type="text/javascript" src="assets/scripts/Chart.bundle.min.js"></script>
-	<script type="text/javascript" src="assets/scripts/Chart.min.js"></script>
-	<script type="text/javascript" src="assets/scripts/index.js"></script>
-</body>
+		<script type="text/javascript" src="assets/scripts/vue.js"></script>
+		<script type="text/javascript" src="assets/scripts/Chart.bundle.min.js"></script>
+		<script type="text/javascript" src="assets/scripts/Chart.min.js"></script>
+		<script type="text/javascript" src="assets/scripts/index.js"></script>
+	</body>
 </html>
